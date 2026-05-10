@@ -15,3 +15,4 @@ int contact_add(const char *name, const char *phone);
 void contact_list(void);
 Contact *contact_search(const char *name, const char *phone);
 int contact_delete(int index);
+int contact_edit(int index, const char *name, const char *phone);

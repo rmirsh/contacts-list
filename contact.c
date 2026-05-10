@@ -45,4 +45,24 @@ Contact *contact_search(const char *name, const char *phone) {
 }
 
 
-int contact_delete(int index);
+int contact_delete(int index) {
+    if (index < 0 || index >= contacts_count) {
+        return 1;
+    }
+
+    for (int i = index; i < contacts_count; i++) {
+        contacts[i] = contacts[i - 1];
+    }
+    
+    contacts_count--;
+
+    return 0;
+}
+
+int contact_edit(int index, const char *name, const char *phone) {
+    strncpy(contacts[index].name, name, sizeof(contacts[index].name) - 1);
+    strncpy(contacts[index].phone, phone, sizeof(contacts[index].phone) - 1);
+
+    return 0;
+}
+

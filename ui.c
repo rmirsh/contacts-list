@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdio.h>
 
+void ui_flush_buffer(void) {
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF);
+}
+
 int ui_read_field(char *buf, size_t buf_size, const char *field_name) {
     printf("Enter %s: \n", field_name);
     
@@ -29,16 +34,13 @@ void ui_run(void) {
     
     while (1) {
         char action;
-        printf("What do you want to do?\n\nList contacts(l) | Add contact(a) | Search contact(s) | Exit(e)\n\n");
+        printf("What do you want to do?\n\nList contacts(l) | Add(a) | Search(s) | Delete(d) | Change(c) | Exit(e)\n\n");
         if (scanf(" %c", &action) != 1) {
             fprintf(stderr, "Input error\n");
             return;
         }
 
-        // clear buffer from \n
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF);
-
+        ui_flush_buffer();
 
         switch (action) {
             case 'l':
@@ -91,6 +93,55 @@ void ui_run(void) {
                     printf("Found contact:\nName: %s\nPhone: %s\n", c->name, c->phone);
                 }
                 
+                break;
+            }
+
+            case 'd': {
+                printf("Enter index: \n");
+                int index;
+                if (scanf("%d", &index) != 1) {
+                    fprintf(stderr, "Input error\n");
+                    ui_flush_buffer();
+                    break;
+                }
+                ui_flush_buffer();
+                
+                if (contact_delete(index) != 0) {
+                    fprintf(stderr, "Contact deletion error\n");
+                }
+
+                printf("Contact with index %d deleted\n", index);
+
+                break;
+            }
+
+            case 'c': {
+                printf("Enter index: \n");
+                int index;
+                if (scanf("%d", &index) != 1) {
+                    fprintf(stderr, "Input error\n");
+                    ui_flush_buffer();
+                    break;
+                }
+                ui_flush_buffer();
+
+                char name[100];
+
+                if (ui_read_field(name, sizeof(name), "name") != 0) {
+                    break;
+                }
+
+                char phone[20];
+                if (ui_read_field(phone, sizeof(phone), "phone") != 0) {
+                    break;
+                }
+                
+                if (contact_edit(index, name, phone) != 0) {
+                    fprintf(stderr, "Edit error\n");
+                }
+
+                printf("\nContact changed\n");
+
                 break;
             }
                 
