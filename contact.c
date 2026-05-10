@@ -50,8 +50,8 @@ int contact_delete(int index) {
         return 1;
     }
 
-    for (int i = index; i < contacts_count; i++) {
-        contacts[i] = contacts[i - 1];
+    for (int i = index; i < contacts_count - 1; i++) {
+        contacts[i] = contacts[i + 1];
     }
     
     contacts_count--;
@@ -60,6 +60,9 @@ int contact_delete(int index) {
 }
 
 int contact_edit(int index, const char *name, const char *phone) {
+    if (index < 0 || index >= contacts_count) {
+        return 1;
+    }
     strncpy(contacts[index].name, name, sizeof(contacts[index].name) - 1);
     strncpy(contacts[index].phone, phone, sizeof(contacts[index].phone) - 1);
 

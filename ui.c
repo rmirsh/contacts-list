@@ -22,10 +22,19 @@ int ui_read_field(char *buf, size_t buf_size, const char *field_name) {
 }
 
 void ui_list_contacts(void) {
-    for (int i = 0; i < contacts_count; i++) {
-        printf("Contact: %d\nName: %s\nPhone: %s\n\n", 
-               i, contacts[i].name, contacts[i].phone);
+    printf("\n--- Contact List (Total: %d) ---\n", contacts_count);
+    if (contacts_count == 0) {
+        printf("No contacts found.\n");
+    } else {
+        for (int i = 0; i < contacts_count; i++) {
+            printf("[%d] Name: %s\n    Phone: %s\n", 
+                   i, contacts[i].name, contacts[i].phone);
+            if (i < contacts_count - 1) {
+                printf("---------------------------------\n");
+            }
+        }
     }
+    printf("---------------------------------\n\n");
 }
 
 void ui_run(void) {
@@ -34,7 +43,14 @@ void ui_run(void) {
     
     while (1) {
         char action;
-        printf("What do you want to do?\n\nList contacts(l) | Add(a) | Search(s) | Delete(d) | Change(c) | Exit(e)\n\n");
+        printf("--- Main Menu ---\n"
+               "(l) List contacts\n"
+               "(a) Add contact\n"
+               "(s) Search contact\n"
+               "(d) Delete contact\n"
+               "(c) Change contact\n"
+               "(e) Exit\n"
+               "\nChoose an action: ");
         if (scanf(" %c", &action) != 1) {
             fprintf(stderr, "Input error\n");
             return;
